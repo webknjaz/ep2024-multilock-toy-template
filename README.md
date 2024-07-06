@@ -1,6 +1,10 @@
 # ep2024-multilock-toy-template
 https://ep2024.europython.eu/session/what-do-lockfiles-pin-actually-let-s-dig-in-and-get-our-hands-dirty
 
+## License
+
+BSD 3-Clause
+
 ## EuroPython Society Code of Conduct
 
 https://www.europython-society.org/coc/
