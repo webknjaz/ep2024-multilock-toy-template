@@ -1,0 +1,2 @@
+pytest  # the main test runner and framework
+requests-unixsocket  # HTTP over UNIX abstract or file socket
