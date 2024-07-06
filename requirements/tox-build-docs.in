@@ -1,1 +1,2 @@
+Furo >= 2024  # modern HTML theme by @pradyunsg
 Sphinx >= 7  # direct dependency, docs builder

@@ -2,4 +2,5 @@
 
 
 copyright = '@webknjaz (Sviatoslav Sydorenko)'
+html_theme = 'furo'
 project = 'Lokiverse'
