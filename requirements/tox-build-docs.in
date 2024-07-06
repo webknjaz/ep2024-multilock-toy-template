@@ -1,2 +1,3 @@
 Furo >= 2024  # modern HTML theme by @pradyunsg
+requests >= 2.32  # direct dependency, for accessing endoflife.date
 Sphinx >= 7  # direct dependency, docs builder
