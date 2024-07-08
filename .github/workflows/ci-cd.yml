@@ -1,0 +1,124 @@
+---
+
+name: CI/CD
+
+on:
+  merge_group:
+  push:
+    branches-ignore:
+    - dependabot/**
+    - gh-readonly-queue/**  # Temporary merge queue-related GH-made branches
+    - maintenance/pip-tools-constraint-lockfiles
+    - maintenance/pip-tools-constraint-lockfiles-**
+  pull_request:
+    types:
+    - opened  # default
+    - synchronize  # default
+    - reopened  # default
+    - ready_for_review  # used in PRs created from the release workflow
+  schedule:
+  - cron: 1 0 * * *  # Run daily at 0:01 UTC
+
+concurrency:
+  group: >-
+    ${{
+        github.workflow
+    }}-${{
+        github.ref_type
+    }}-${{
+        github.event.pull_request.number || github.sha
+    }}
+  cancel-in-progress: true
+
+env:
+  FORCE_COLOR: 1  # Request colored output from CLI tools supporting it
+  PIP_DISABLE_PIP_VERSION_CHECK: 1
+  PIP_NO_PYTHON_VERSION_WARNING: 1
+  PIP_NO_WARN_SCRIPT_LOCATION: 1
+  PY_COLORS: 1  # Recognized by the `py` package, dependency of `pytest`
+  TOX_TESTENV_PASSENV: >-  # Make tox-wrapped tools see color requests
+    FORCE_COLOR
+    NO_COLOR
+    PIP_DISABLE_PIP_VERSION_CHECK
+    PIP_NO_PYTHON_VERSION_WARNING
+    PIP_NO_WARN_SCRIPT_LOCATION
+    PY_COLORS
+    PYTEST_THEME
+    PYTEST_THEME_MODE
+
+jobs:
+
+  tests:
+    name: >-
+      🧪 [${{ matrix.tox-env }}] @
+      ${{
+          matrix.python-version
+      }} @ ${{
+          matrix.os
+      }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+        - ubuntu-22.04
+        - ubuntu-20.04
+        - macos-13
+        - windows-2019
+        - windows-2022
+        python-version:
+        # NOTE: The latest and the lowest supported Pythons are prioritized
+        # NOTE: to improve the responsiveness. It's nice to see the most
+        # NOTE: important results first.
+        - 3.12
+        - 3.8
+        - pypy-3.10
+        - 3.11
+        - >-
+          3.10
+        - 3.9
+        tox-env:
+        - python
+        include:
+        - os: ubuntu-latest
+          python-version: 3.12
+          tox-env: build-dists
+        - os: ubuntu-latest
+          python-version: 3.12
+          tox-env: build-docs
+
+    env:
+      TOXENV: ${{ matrix.tox-env }}
+
+    steps:
+    - name: Grab the source from Git
+      uses: actions/checkout@v4  # Keep before `setup-python` for cache to work
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install tox
+      run: python -Im pip install tox
+
+    - name: Pre-populate tox env: ${{ env.TOXENV }}
+      run: python -Im tox --notest --skip-missing-interpreters false
+
+    - name: Run the testing
+      run: python -Im tox
+
+  check:  # This job does nothing and is only used for the branch protection
+    if: always()
+
+    needs:
+    - tests
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Decide whether the needed jobs succeeded or failed
+      uses: re-actors/alls-green@release/v1
+      with:
+        jobs: ${{ toJSON(needs) }}
+
+...
