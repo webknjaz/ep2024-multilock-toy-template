@@ -1,4 +1,6 @@
 # ep2024-multilock-toy-template
+
+This is a repository created for the following workshop:
 https://ep2024.europython.eu/session/what-do-lockfiles-pin-actually-let-s-dig-in-and-get-our-hands-dirty
 
 ## License
