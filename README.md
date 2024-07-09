@@ -3,6 +3,12 @@
 This is a repository created for the following workshop:
 https://ep2024.europython.eu/session/what-do-lockfiles-pin-actually-let-s-dig-in-and-get-our-hands-dirty
 
+## Configuration requirement
+
+In order to allow the pull request creation automatically from the included GitHub Actions
+workflow, go to the repository settings, then `Actions` and `General`.
+Check `Allow GitHub Actions to create and approve pull requests` and `Save`.
+
 ## License
 
 BSD 3-Clause
