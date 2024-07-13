@@ -26,13 +26,9 @@ pluggy==1.5.0
     # via pytest
 pytest==8.2.2
     # via -r requirements/tox-py.in
-requests==2.31.0 ; platform_system == "Linux"
-    # via
-    #   -c requirements/tox-py-constraints.in
-    #   requests-unixsocket
+requests==2.32.3
+    # via requests-unixsocket
 requests-unixsocket==0.3.0
     # via -r requirements/tox-py.in
-urllib3==1.26.19 ; platform_system == "Linux"
-    # via
-    #   -c requirements/tox-py-constraints.in
-    #   requests
+urllib3==2.2.2
+    # via requests
